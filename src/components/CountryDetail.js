@@ -1,9 +1,22 @@
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 
 import classes from "./CountryDetail.module.css";
 
 const CountryDetail = () => {
   const country = useLoaderData();
+
+  if (country.isError) {
+    return (
+      <>
+        <Link to="/">
+          <button className={classes.backBtn}>back</button>
+        </Link>
+        <div className={classes.wrapper}>
+          <h3>Can't fetch data.</h3>
+        </div>
+      </>
+    );
+  }
 
   console.log(country);
 
@@ -86,3 +99,33 @@ const CountryDetail = () => {
 };
 
 export default CountryDetail;
+
+export const fetchCountryDetail = async ({ params }) => {
+  const res = await fetch(
+    `https://restcountries.com/v3.1/alpha/${params.code}`
+  );
+
+  if (!res.ok) {
+    return { isError: true, message: "Could not fetch country data" };
+  } else {
+    const [country] = await res.json();
+    const countryDetail = {
+      capital: country.capital && country.capital[0],
+      population: country.population.toLocaleString(),
+      name: country.name,
+      nativeName: Object.values(country.name.nativeName)[0].official,
+      code: country.cioc,
+      region: country.region,
+      subRegion: country.subregion,
+      topLevelDomain: country.topLevelDomain,
+      currencies: Object.values(country.currencies)
+        .map((currency) => currency.name)
+        .join(", "),
+      languages: Object.values(country.languages).join(", "),
+      flagUrl: country.flags.png,
+      tld: country.tld[0],
+      borders: country.borders,
+    };
+    return countryDetail;
+  }
+};

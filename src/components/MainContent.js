@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navigation from "./Navigation";
 import Cart from "./UI/Cart";
 import SearchBar from "./SearchBar";
 
@@ -59,7 +58,7 @@ function MainContent() {
   return (
     <>
       <SearchBar onSearch={searchHandler} onFilter={searchHandler} />
-      {isLoading && <p>is loading</p>}
+      {isLoading && <p className="loading">is loading...</p>}
       <ul className="container">
         {filteredCountry &&
           filteredCountry.map((country) => {

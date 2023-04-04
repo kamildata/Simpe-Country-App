@@ -7,7 +7,7 @@ const SearchBar = (props) => {
 
   const searchCountryHandler = (event) => {
     setSearchCountry(event.target.value);
-    props.onSearch(event.target.value, region);
+    props.onSearch(event.target.value.toLowerCase().trim(), region);
   };
 
   const filterCountryHandler = (event) => {
